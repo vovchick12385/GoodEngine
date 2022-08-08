@@ -1,0 +1,6 @@
+[submodule "GoodEngine/external/glfw"]
+	path = GoodEngine/external/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "GoodEngine/external/spdlog"]
+	path = GoodEngine/external/spdlog
+	url = https://github.com/gabime/spdlog.git
