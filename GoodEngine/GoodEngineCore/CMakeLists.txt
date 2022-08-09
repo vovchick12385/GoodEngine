@@ -9,6 +9,7 @@ set(ENGINE_PROJECT_NAME GoodEngineCore)
 set(ENGINE_PUBLIC_INCLUDES
 	includes/GoodEngineCore/Application.h
 	includes/GoodEngineCore/Log.h
+	includes/GoodEngineCore/Event.h
 )
 
 set(ENGINE_PRIVATE_INCLUDES
@@ -19,6 +20,7 @@ set(ENGINE_PRIVATE_SOURCES
 	src/GoodEngineCore/Application.cpp
 	src/GoodEngineCore/Log.cpp
 	src/GoodEngineCore/Window.cpp
+	src/GoodEngineCore/Event.cpp
 )
 
 add_library(${ENGINE_PROJECT_NAME} STATIC

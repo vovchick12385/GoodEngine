@@ -6,7 +6,7 @@ namespace GoodEngine
 {
 	static bool s_GLFW_initialized = false;
 	
-	Window::Window(std::string title_, unsigned int width_, unsigned int height_):title(title_),width(width_),height(height_)
+	Window::Window(std::string title_, unsigned int width_, unsigned int height_) :m_data({ std::move(title_),width_,height_ })
 	{
 		Init();
 	}
@@ -30,11 +30,15 @@ namespace GoodEngine
 	}
 	unsigned int Window::GetWidth()
 	{
-		return width;
+		return m_data.width;
 	}
 	unsigned int Window::GetHeight()
 	{
-		return height;
+		return m_data.height;
+	}
+	void Window::SetEventCallback(const EventCallBackFn& callback)
+	{
+		m_data.eventCallbackfn = callback;
 	}
 	int Window::Init()
 	{
@@ -47,11 +51,11 @@ namespace GoodEngine
 			}
 			s_GLFW_initialized = true;
 		}
-		window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+		window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
 		if (!window)
 		{
 			glfwTerminate();
-			LOG_ERROR("Window {0} was not created!!!",title);
+			LOG_ERROR("Window {0} was not created!!!",m_data.title);
 			return -1;
 		}
 
@@ -62,8 +66,26 @@ namespace GoodEngine
 			LOG_CRITICAL("Failed to initialise GLAD");
 			return -1;
 		}
-		
-		LOG_INFO("Createing window {0} width size {1}x{2}", title, width, height);
+		glfwSetWindowUserPointer(window, &m_data);
+
+		glfwSetWindowSizeCallback(window, [](GLFWwindow* pWindow, int width, int height) {
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(pWindow));
+			data.width = width;
+			data.height = height;
+			EventWindowResize event(width, height);
+			data.eventCallbackfn(event);
+			});
+		glfwSetCursorPosCallback(window, [](GLFWwindow* pWindow, double width, double height) {
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(pWindow));
+			EventMouseMoved event(width, height);
+			data.eventCallbackfn(event);
+			});
+		glfwSetWindowCloseCallback(window, [](GLFWwindow* pWindow) {
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(pWindow));
+			EventWindowClosed event;
+			data.eventCallbackfn(event);
+			});
+		LOG_INFO("Createing window {0} width size {1}x{2}", m_data.title, m_data.width, m_data.height);
 		return 0;
 	}
 	void Window::Shotdown()

@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-
+#include "GoodEngineCore/Event.h"
 
 namespace GoodEngine
 {
@@ -19,5 +19,7 @@ namespace GoodEngine
 		virtual void on_update();
 	private:
 		std::unique_ptr<Window> m_pWindow;
+		bool bCloseWindow = false;
+		EventDispatcher m_event_dispatcher;
 	};
 }

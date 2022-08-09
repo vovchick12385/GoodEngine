@@ -1,6 +1,7 @@
 #pragma once
+#include "GoodEngineCore/Event.h"
 #include <string>
-
+#include <functional>
 
 struct GLFWwindow;
 
@@ -9,6 +10,7 @@ namespace GoodEngine
 	class Window
 	{
 	public:
+		using EventCallBackFn = std::function<void(BaseEvent&)>;
 		Window(std::string title_, unsigned int width_, unsigned int height_);
 		~Window();
 		Window(const Window&) = delete;
@@ -20,11 +22,18 @@ namespace GoodEngine
 		void on_update();
 		unsigned int GetWidth();
 		unsigned int GetHeight();
+		void SetEventCallback(const EventCallBackFn& callback);
 	private:
+		struct WindowData
+		{
+			std::string title;
+			unsigned int width, height;
+			EventCallBackFn eventCallbackfn;
+		};
 		int Init();
 		void Shotdown();
 		GLFWwindow* window;
-		unsigned int width, height;
-		std::string title;
+		WindowData m_data;
+		
 	};
 }
