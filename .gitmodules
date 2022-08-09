@@ -4,3 +4,9 @@
 [submodule "GoodEngine/external/spdlog"]
 	path = GoodEngine/external/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "GoodEndine/external/imgui"]
+	path = GoodEndine/external/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "GoodEngine/external/imgui"]
+	path = GoodEngine/external/imgui
+	url = https://github.com/ocornut/imgui.git
